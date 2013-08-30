@@ -38,6 +38,12 @@ class EmConf {
     protected $comment = '';
     protected $fileName = NULL;
 
+	public function __construct($fileName=NULL) {
+		if($fileName !== NULL) {
+			$this->readFile($fileName);
+		}
+	}
+
     public function readFile($fileName) {
         if(!file_exists($fileName)) {
             throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $fileName));
