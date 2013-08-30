@@ -9,6 +9,12 @@ class Extension {
 
     protected $extensionDownloadPath = 'http://typo3.org/fileadmin/ter';
 
+	public function __construct($extensionDownloadPath = NULL) {
+		if($extensionDownloadPath !== NULL) {
+			$this->extensionDownloadPath = $extensionDownloadPath;
+		}
+	}
+
     /**
      * get the uri to download an extension from
      *
