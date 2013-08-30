@@ -53,8 +53,8 @@ Delete extension key "my_extension"
 Return codes
 ============
 
-* `0` if the key is available for registration
-* `1` if the key is already registered
+* `0` if the key is successfully deleted
+* `1` if the key does not exist
 * `2` if the key is formally invalid
 EOT
 )
@@ -96,6 +96,9 @@ EOT
         } catch (ExtensionKeyNotValidException $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             return 2;
+        } catch (\Exception $e) {
+	        $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+	        return 99;
         }
     }
 }
