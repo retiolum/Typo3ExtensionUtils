@@ -9,7 +9,7 @@ namespace etobi\extensionUtils\Service;
  * values the class will try to keep them in a later rewrite if you not explicitly ask
  * it to change the value.
  */
-class EmConf {
+class EmConf implements \ArrayAccess {
 
     const CATEGORY_BACKEND = 'be';
     const CATEGORY_MODULE = 'module';
@@ -301,5 +301,19 @@ class EmConf {
         $this->emconf['version'] = (string)$version;
     }
 
+	public function offsetExists($offset) {
+		return array_key_exists($offset, $this->emconf);
+	}
 
+	public function offsetGet($offset) {
+		return $this->offsetExists($offset) ? $this->emconf[$offset] : NULL;
+	}
+
+	public function offsetSet($offset, $value) {
+		$this->emconf[$offset] = $value;
+	}
+
+	public function offsetUnset($offset) {
+		unset($this->emconf[$offset]);
+	}
 }
