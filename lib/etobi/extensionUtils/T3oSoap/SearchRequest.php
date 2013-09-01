@@ -1,6 +1,7 @@
 <?php
 
 namespace etobi\extensionUtils\T3oSoap;
+use etobi\extensionUtils\Model\TerExtensionKeyInfo;
 
 /**
  * search for extension keys
@@ -31,7 +32,12 @@ class SearchRequest extends AbstractAuthenticatedRequest {
 		    throw new \RuntimeException(sprintf('Soap API responded with an unknown response. result code "%s"', $response['simpleResult']['resultCode']));
 	    }
 
-	    return $response['extensionKeyData'];
+	    $resultSet = array();
+	    foreach($response['extensionKeyData'] as $extensionData) {
+			$resultSet[] = new TerExtensionKeyInfo($extensionData);
+	    }
+
+	    return $resultSet;
     }
 
 	public function searchByUsername($username) {

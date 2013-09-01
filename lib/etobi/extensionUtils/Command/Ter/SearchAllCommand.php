@@ -96,10 +96,10 @@ EOT
 	/**
 	 * print extension information into the output
 	 *
-	 * @param array $data
+	 * @param array|ArrayAccess $data
 	 * @return void
 	 */
-	protected function printExtensionInfo(array $data) {
+	protected function printExtensionInfo($data) {
 		$this->output->writeln('<comment>' . $data['title'] . '</comment>');
 		$maxKeyStrlen = 1;
 

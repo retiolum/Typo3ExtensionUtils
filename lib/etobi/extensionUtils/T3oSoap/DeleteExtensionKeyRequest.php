@@ -1,6 +1,7 @@
 <?php
 
 namespace etobi\extensionUtils\T3oSoap;
+use etobi\extensionUtils\T3oSoap\Exception\AccessDeniedException;
 use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyHasUploadsException;
 use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyNotExistsException;
 
@@ -25,7 +26,11 @@ class DeleteExtensionKeyRequest extends AbstractAuthenticatedRequest {
         $this->createClient();
         $this->client->addArgument($extensionKey);
 
-        $result = $this->client->call('deleteExtensionKey');
+	    try {
+            $result = $this->client->call('deleteExtensionKey');
+	    } catch(\SoapFault $e) {
+		    throw $this->convertSoapError($e);
+	    }
 
         if($result['resultCode'] == self::TX_TER_RESULT_GENERAL_OK){
             return TRUE;

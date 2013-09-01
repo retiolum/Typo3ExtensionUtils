@@ -124,12 +124,12 @@ EOT
             $this->logger->error('Error: ' . $response);
             return 1;
         }
-        if ($response['resultCode'] == 10504) {
-            if(is_array($response['resultMessages'])) {
-                $output->writeln($response['resultMessages']);
-            }
+
+        if(is_array($response['resultMessages'])) {
+            $output->writeln($response['resultMessages']);
             return 0;
+        } else {
+            return 1;
         }
-        return 0;
     }
 }

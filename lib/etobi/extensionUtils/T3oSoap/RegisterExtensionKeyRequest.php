@@ -1,6 +1,7 @@
 <?php
 
 namespace etobi\extensionUtils\T3oSoap;
+use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyAlreadyExistsException;
 use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyNotValidException;
 
 /**
@@ -34,7 +35,7 @@ class RegisterExtensionKeyRequest extends AbstractAuthenticatedRequest {
         if($result['resultCode'] == self::TX_TER_RESULT_EXTENSIONKEYSUCCESSFULLYREGISTERED){
             return TRUE;
         } elseif($result['resultCode'] == self::TX_TER_RESULT_EXTENSIONKEYALREADYEXISTS) {
-            return FALSE;
+            throw new ExtensionKeyAlreadyExistsException();
         } elseif($result['resultCode'] == self::TX_TER_RESULT_EXTENSIONKEYNOTVALID) {
             throw new ExtensionKeyNotValidException(sprintf(
                 '"%s" is not a valid extension key',
