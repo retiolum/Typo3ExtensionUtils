@@ -1,10 +1,10 @@
 <?php
 
-namespace etobi\extensionUtils\Tests\Service\EmConf;
+namespace etobi\extensionUtils\Tests\Model;
 
-use etobi\extensionUtils\Service\EmConf;
+use etobi\extensionUtils\Model\EmConf;
 
-class GetterSetterTest extends \PHPUnit_Framework_TestCase {
+class EmConfTest extends \PHPUnit_Framework_TestCase {
 
     protected $defaultData = array (
         'title' => 'Foobar 42',
@@ -23,35 +23,35 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     /**
      * @var EmConf
      */
-    protected $emconf;
+    protected $emConf;
 
     public function setUp() {
-        $this->emconf = new EmConf();
-        $this->emconf->readArray($this->defaultData);
+        $this->emConf = new EmConf($this->defaultData);
     }
 
     public function testTitle() {
         $this->assertSame(
             'Foobar 42',
-            $this->emconf->getTitle(),
+            $this->emConf->getTitle(),
             'get title from given array'
         );
 
-        $this->emconf->setTitle('Foobar 43');
+        $this->emConf->setTitle('Foobar 43');
 
         $this->assertSame(
             'Foobar 43',
-            $this->emconf->getTitle(),
+            $this->emConf->getTitle(),
             'title set in setTitle is available in getTitle'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'title',
-            $this->emconf->toArray(),
+            $emConfArray,
             'title set in setTitle is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['title'],
+            $emConfArray['title'],
             'Foobar 43',
             'title set in setTitle is available in array export #2'
         );
@@ -60,25 +60,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testDescription() {
         $this->assertSame(
             'Lorem ipsum sid dolor',
-            $this->emconf->getDescription(),
+            $this->emConf->getDescription(),
             'get description from given array'
         );
 
-        $this->emconf->setDescription('Lorem ipsum');
+        $this->emConf->setDescription('Lorem ipsum');
 
         $this->assertSame(
             'Lorem ipsum',
-            $this->emconf->getDescription(),
+            $this->emConf->getDescription(),
             'description set in setDescription is available in getDescription'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'description',
-            $this->emconf->toArray(),
+            $emConfArray,
             'description set in setDescription is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['description'],
+            $emConfArray['description'],
             'Lorem ipsum',
             'description set in setDescription is available in array export #2'
         );
@@ -87,25 +88,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testCategory() {
         $this->assertSame(
             'module',
-            $this->emconf->getCategory(),
+            $this->emConf->getCategory(),
             'get description from given array'
         );
 
-        $this->emconf->setCategory(EmConf::CATEGORY_EXAMPLE);
+        $this->emConf->setCategory(EmConf::CATEGORY_EXAMPLE);
 
         $this->assertSame(
             EmConf::CATEGORY_EXAMPLE,
-            $this->emconf->getCategory(),
+            $this->emConf->getCategory(),
             'category set in setCategory is available in getCategory'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'category',
-            $this->emconf->toArray(),
+            $emConfArray,
             'category set in setCategory is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['category'],
+            $emConfArray['category'],
             EmConf::CATEGORY_EXAMPLE,
             'category set in setCategory is available in array export #2'
         );
@@ -114,25 +116,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testShy() {
         $this->assertSame(
             FALSE,
-            $this->emconf->isShy(),
+            $this->emConf->isShy(),
             'get shy from given array'
         );
 
-        $this->emconf->setShy(TRUE);
+        $this->emConf->setShy(TRUE);
 
         $this->assertSame(
             TRUE,
-            $this->emconf->isShy(),
+            $this->emConf->isShy(),
             'shy set in setShy is available in isShy'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'shy',
-            $this->emconf->toArray(),
+            $emConfArray,
             'shy set in setShy is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['shy'],
+            $emConfArray['shy'],
             1,
             'shy set in setShy is available in array export #2'
         );
@@ -141,25 +144,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testPriority() {
         $this->assertSame(
             EmConf::PRIORITY_DEFAULT,
-            $this->emconf->getPriority(),
+            $this->emConf->getPriority(),
             'get priority from given array'
         );
 
-        $this->emconf->setPriority(EmConf::PRIORITY_TOP);
+        $this->emConf->setPriority(EmConf::PRIORITY_TOP);
 
         $this->assertSame(
             EmConf::PRIORITY_TOP,
-            $this->emconf->getPriority(),
+            $this->emConf->getPriority(),
             'shy set in setPriority is available in getPriority'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'priority',
-            $this->emconf->toArray(),
+            $emConfArray,
             'priority set in setPriority is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['priority'],
+            $emConfArray['priority'],
             EmConf::PRIORITY_TOP,
             'priority set in setPriority is available in array export #2'
         );
@@ -168,25 +172,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testState() {
         $this->assertSame(
             EmConf::STATE_BETA,
-            $this->emconf->getState(),
+            $this->emConf->getState(),
             'get state from given array'
         );
 
-        $this->emconf->setState(EmConf::STATE_TEST);
+        $this->emConf->setState(EmConf::STATE_TEST);
 
         $this->assertSame(
             EmConf::STATE_TEST,
-            $this->emconf->getState(),
+            $this->emConf->getState(),
             'shy set in setShy is available in isShy'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'state',
-            $this->emconf->toArray(),
+            $emConfArray,
             'state set in setState is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['state'],
+            $emConfArray['state'],
             EmConf::STATE_TEST,
             'state set in setState is available in array export #2'
         );
@@ -195,25 +200,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testClearCacheOnLoad() {
         $this->assertSame(
             FALSE,
-            $this->emconf->hasClearCacheOnLoad(),
+            $this->emConf->hasClearCacheOnLoad(),
             'get clearCacheOnLoad from given array'
         );
 
-        $this->emconf->setClearCacheOnLoad(TRUE);
+        $this->emConf->setClearCacheOnLoad(TRUE);
 
         $this->assertSame(
             TRUE,
-            $this->emconf->hasClearCacheOnLoad(),
+            $this->emConf->hasClearCacheOnLoad(),
             'clearCacheOnLoad set in setClearCacheOnLoad is available in hasClearCacheOnLoad'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'clearcacheonload',
-            $this->emconf->toArray(),
+            $emConfArray,
             'clearCacheOnLoad set in setClearCacheOnLoad is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['clearcacheonload'],
+            $emConfArray['clearcacheonload'],
             1,
             'clearCacheOnLoad set in setClearCacheOnLoad is available in array export #2'
         );
@@ -222,25 +228,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testAuthor() {
         $this->assertSame(
             'John Doe',
-            $this->emconf->getAuthor(),
+            $this->emConf->getAuthor(),
             'get author from given array'
         );
 
-        $this->emconf->setAuthor('Jane Doe');
+        $this->emConf->setAuthor('Jane Doe');
 
         $this->assertSame(
             'Jane Doe',
-            $this->emconf->getAuthor(),
+            $this->emConf->getAuthor(),
             'author set in setAuthor is available in getAuthor'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'author',
-            $this->emconf->toArray(),
+            $emConfArray,
             'author set in setAuthor is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['author'],
+            $emConfArray['author'],
             'Jane Doe',
             'author set in setAuthor is available in array export #2'
         );
@@ -249,25 +256,25 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testAuthorEmail() {
         $this->assertSame(
             'doe@example.com',
-            $this->emconf->getAuthorEmail(),
+            $this->emConf->getAuthorEmail(),
             'get author_email from given array'
         );
 
-        $this->emconf->setAuthorEmail('john@example.com');
+        $this->emConf->setAuthorEmail('john@example.com');
 
         $this->assertSame(
             'john@example.com',
-            $this->emconf->getAuthorEmail(),
+            $this->emConf->getAuthorEmail(),
             'author_email set in setAuthorEmail is available in getAuthorEmail'
         );
-
+		$emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'author_email',
-            $this->emconf->toArray(),
+	        $emConfArray,
             'author_email set in setAuthorEmail is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['author_email'],
+            $emConfArray['author_email'],
             'john@example.com',
             'author_email set in setAuthorEmail is available in array export #2'
         );
@@ -276,25 +283,26 @@ class GetterSetterTest extends \PHPUnit_Framework_TestCase {
     public function testAuthorCompany() {
         $this->assertSame(
             'Foobar Corp.',
-            $this->emconf->getAuthorCompany(),
+            $this->emConf->getAuthorCompany(),
             'get author_company from given array'
         );
 
-        $this->emconf->setAuthorCompany('BazBar Ltd.');
+        $this->emConf->setAuthorCompany('BazBar Ltd.');
 
         $this->assertSame(
             'BazBar Ltd.',
-            $this->emconf->getAuthorCompany(),
+            $this->emConf->getAuthorCompany(),
             'author_company set in setAuthorCompany is available in getAuthorCompany'
         );
 
+	    $emConfArray = $this->emConf->getConfigurationArray();
         $this->assertArrayHasKey(
             'author_company',
-            $this->emconf->toArray(),
+            $emConfArray,
             'author_company set in setAuthorCompany is available in array export #1'
         );
         $this->assertSame(
-            $this->emconf->toArray()['author_company'],
+            $emConfArray['author_company'],
             'BazBar Ltd.',
             'author_company set in setAuthorCompany is available in array export #2'
         );

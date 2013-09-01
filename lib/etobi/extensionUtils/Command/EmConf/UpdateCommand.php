@@ -4,6 +4,7 @@ namespace etobi\extensionUtils\Command\EmConf;
 
 use etobi\extensionUtils\Command\AbstractCommand;
 use etobi\extensionUtils\Service\EmConf;
+use etobi\extensionUtils\Service\EmConfService;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -74,8 +75,9 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $emconf = new EmConf();
-        $emconf->readFile($input->getArgument('emconfFile'));
+	    $filePath = $input->getArgument('emconfFile');
+        $emconfService = new EmConfService();
+        $emconf = $emconfService->readFile($filePath);
 
         if($input->getOption('title')) {
             $emconf->setTitle($input->getOption('title'));
@@ -106,7 +108,7 @@ EOT
             $this->logger->info(sprintf('state set to "%s"', $input->getOption('state')));
         }
 
-        $emconf->writeFile();
+        $emconfService->writeFile($emconf, $filePath);
         $output->writeln(sprintf('"%s" updated', $input->getArgument('emconfFile')));
     }
 }

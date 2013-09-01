@@ -1,12 +1,18 @@
 <?php
 
-namespace etobi\extensionUtils\Tests\Service\EmConf;
+namespace etobi\extensionUtils\Tests\Service;
 
-use etobi\extensionUtils\Service\EmConf;
+use etobi\extensionUtils\Service\EmConfService;
+use etobi\extensionUtils\Model\EmConf;
 
-class ReaderWriterTest extends \PHPUnit_Framework_TestCase {
+class ExtTest extends \PHPUnit_Framework_TestCase {
 
     protected $tempFiles = array();
+	protected $testExtEmConfFile = '';
+
+	public function setUp() {
+		$this->testExtEmConfFile = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'test_ext_emconf.php';
+	}
 
     public function tearDown() {
         foreach($this->tempFiles as $tempFile) {
@@ -25,8 +31,8 @@ class ReaderWriterTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testFileReader() {
-        $emconf = new EmConf();
-        $emconf->readFile(__DIR__ . DIRECTORY_SEPARATOR . 'test_ext_emconf.php');
+	    $emConfService = new EmConfService();
+        $emconf = $emConfService->readFile($this->testExtEmConfFile);
 
         $this->assertSame(
             'Extension Builder',
@@ -42,8 +48,8 @@ class ReaderWriterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testStringReader() {
-        $emconf = new EmConf();
-        $emconf->readString(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'test_ext_emconf.php'));
+	    $emConfService = new EmConfService();
+        $emconf = $emConfService->readString(file_get_contents($this->testExtEmConfFile));
 
         $this->assertSame(
             'Extension Builder',
@@ -59,10 +65,10 @@ class ReaderWriterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testToString() {
-        $emconf = new EmConf();
-        $emconf->readFile(__DIR__ . DIRECTORY_SEPARATOR . 'test_ext_emconf.php');
+	    $emConfService = new EmConfService();
+        $emconf = $emConfService->readFile($this->testExtEmConfFile);
 
-        $string = $emconf->toString();
+        $string = $emConfService->writeString($emconf);
 
         $this->assertStringStartsWith('<?php', $string, 'string starts with an opening PHP tag');
         $this->assertStringEndsWith('?>', $string, 'string ends with a closing PHP tag');
@@ -74,19 +80,18 @@ class ReaderWriterTest extends \PHPUnit_Framework_TestCase {
 
     public function testWriteFile() {
         $fileName = $this->getTempfileName('php');
-        copy(__DIR__ . DIRECTORY_SEPARATOR . 'test_ext_emconf.php', $fileName);
+        copy($this->testExtEmConfFile, $fileName);
 
         $originalContent = file($fileName);
 
-        $emconf = new EmConf();
-        $emconf->readFile($fileName);
+	    $emConfService = new EmConfService();
+	    $emconf = $emConfService->readFile($fileName);
         // set content to something to see if writeFile actually writes something
         file_put_contents($fileName, 'test failed');
-        $emconf->writeFile();
+        $emConfService->writeFile($emconf, $fileName);
 
         $this->assertNotContains('test failed', file_get_contents($fileName), 'writeFile() wrote a file');
-        $emconf2 = new EmConf();
-        $emconf2->readFile($fileName);
+        $emconf2 = $emConfService->readFile($fileName);
         $this->assertSame($emconf->getTitle(), $emconf2->getTitle(), 'EmConf can read array of its created files');
         $this->assertSame($emconf->getComment(), $emconf2->getComment(), 'EmConf can read comment of its created files');
 

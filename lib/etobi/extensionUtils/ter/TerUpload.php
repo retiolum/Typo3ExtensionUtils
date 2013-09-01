@@ -31,6 +31,7 @@
 
 namespace etobi\extensionUtils\ter;
 use etobi\extensionUtils\Service\EmConf;
+use etobi\extensionUtils\Service\EmConfService;
 use etobi\extensionUtils\T3oSoap\UploadRequest;
 
 /**
@@ -167,8 +168,9 @@ class TerUpload {
 	 */
 	protected function getEmConf() {
 		if ($this->emConf === NULL) {
-			$emConf = new EmConf($this->path . 'ext_emconf.php');
-			$this->emConf = $emConf->toArray();
+			$emConfService = new EmConfService();
+			$emConf = $emConfService->readFile($this->path . 'ext_emconf.php');
+			$this->emConf = $emConf->getConfigurationArray();
 		}
 		return $this->emConf;
 	}
