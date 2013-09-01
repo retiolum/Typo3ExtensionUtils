@@ -34,6 +34,7 @@ $console->addCommands(array(
     new Command\EmConf\UpdateCommand(),
     new Command\Ter\CheckExtensionKeyCommand(),
     new Command\Ter\RegisterExtensionKeyCommand(),
+	new Command\Ter\TransferExtensionKeyCommand(),
 	new Command\Ter\DeleteExtensionKeyCommand(),
 	new Command\Ter\SearchAllCommand(),
 	new Command\Ter\SearchUserCommand(),

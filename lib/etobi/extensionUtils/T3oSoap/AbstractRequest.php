@@ -1,6 +1,13 @@
 <?php
 
 namespace etobi\extensionUtils\T3oSoap;
+use etobi\extensionUtils\T3oSoap\Exception\AccessDeniedException;
+use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyNotExistsException;
+use etobi\extensionUtils\T3oSoap\Exception\NoUserOrPasswordException;
+use etobi\extensionUtils\T3oSoap\Exception\SoapServerError;
+use etobi\extensionUtils\T3oSoap\Exception\Typo3VersionIncorrectException;
+use etobi\extensionUtils\T3oSoap\Exception\UserNotFoundException;
+use etobi\extensionUtils\T3oSoap\Exception\WrongPasswordException;
 
 /**
  * a request object that queries the TYPO3.org SOAP API
@@ -53,6 +60,9 @@ abstract class AbstractRequest {
     const TX_TER_RESULT_EXTENSIONKEYSUCCESSFULLYREGISTERED = '10503';
     const TX_TER_RESULT_EXTENSIONSUCCESSFULLYUPLOADED = '10504';
     const TX_TER_RESULT_EXTENSIONSUCCESSFULLYDELETED = '10505';
+
+	const TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYINCORRECT = '209';
+	const TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYCHECKFAILED = '210';
     
     /**
      * @var string
@@ -105,4 +115,39 @@ abstract class AbstractRequest {
         $this->client = new Client($this->wsdlURL);
         return $this->client;
     }
+
+	/**
+	 * handle a generic \SoapFault and throw an according Exception object
+	 * @param \SoapFault $e
+	 * @return \Exception
+	 */
+	protected function convertSoapError(\SoapFault $e) {
+		if($e->faultcode == self::TX_TER_ERROR_GENERAL_DATABASEERROR ||
+			$e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYCHECKFAILED
+		) {
+			return new SoapServerError($e->getMessage(), $e->getCode());
+		}
+		if($e->faultcode == self::TX_TER_ERROR_GENERAL_NOUSERORPASSWORD) {
+			return new NoUserOrPasswordException($e->getMessage(), $e->getCode());
+		}
+		if($e->faultcode == self::TX_TER_ERROR_GENERAL_WRONGPASSWORD) {
+			return new WrongPasswordException($e->getMessage(), $e->getCode());
+		}
+		if($e->faultcode == self::TX_TER_ERROR_GENERAL_USERNOTFOUND) {
+			return new UserNotFoundException($e->getMessage(), $e->getCode());
+		}
+		if($e->faultcode == self::TX_TER_ERROR_MODIFYEXTENSIONKEY_ACCESSDENIED ||
+			$e->faultcode == self::TX_TER_ERROR_DELETEEXTENSIONKEY_ACCESSDENIED ||
+			$e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_ACCESSDENIED
+		) {
+			return new AccessDeniedException($e->getMessage(), $e->getCode());
+		}
+		if($e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_EXTENSIONDOESNTEXIST) {
+			return new ExtensionKeyNotExistsException($e->getMessage(), $e->getCode());
+		}
+		if($e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYINCORRECT) {
+			return new Typo3VersionIncorrectException($e->getMessage(), $e->getCode());
+		}
+		return $e;
+	}
 }
