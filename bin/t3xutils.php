@@ -1,8 +1,19 @@
+#!/usr/bin/env php
 <?php
 
 use etobi\extensionUtils\Command as Command;
 
-require(__DIR__ . '/../vendor/autoload.php');
+$files = array(
+	__DIR__ . '/../vendor/autoload.php',
+	__DIR__ . '/../../../autoload.php'
+);
+
+foreach ($files as $file) {
+	if (file_exists($file)) {
+		require_once $file;
+		break;
+	}
+}
 
 $console = new \Symfony\Component\Console\Application();
 $console->setName('t3xutils');
