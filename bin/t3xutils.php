@@ -2,8 +2,7 @@
 
 use etobi\extensionUtils\Command as Command;
 
-require(__DIR__ . '/../lib/autoload.php');
-\etobi\extensionUtils\register_autoload();
+require(__DIR__ . '/../vendor/autoload.php');
 
 $console = new \Symfony\Component\Console\Application();
 $console->setName('t3xutils');
