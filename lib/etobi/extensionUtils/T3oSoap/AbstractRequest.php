@@ -122,31 +122,34 @@ abstract class AbstractRequest {
 	 * @return \Exception
 	 */
 	protected function convertSoapError(\SoapFault $e) {
-		if($e->faultcode == self::TX_TER_ERROR_GENERAL_DATABASEERROR ||
-			$e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYCHECKFAILED
+		$faultcode = trim($e->faultcode);
+		$code = $e->getCode();
+		$message = ($e->getMessage());
+		if($faultcode == self::TX_TER_ERROR_GENERAL_DATABASEERROR ||
+			$faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYCHECKFAILED
 		) {
-			return new SoapServerError($e->getMessage(), $e->getCode());
+			return new SoapServerError($message, $code);
 		}
-		if($e->faultcode == self::TX_TER_ERROR_GENERAL_NOUSERORPASSWORD) {
-			return new NoUserOrPasswordException($e->getMessage(), $e->getCode());
+		if($faultcode == self::TX_TER_ERROR_GENERAL_NOUSERORPASSWORD) {
+			return new NoUserOrPasswordException($message, $code);
 		}
-		if($e->faultcode == self::TX_TER_ERROR_GENERAL_WRONGPASSWORD) {
-			return new WrongPasswordException($e->getMessage(), $e->getCode());
+		if($faultcode == self::TX_TER_ERROR_GENERAL_WRONGPASSWORD) {
+			return new WrongPasswordException($message, $code);
 		}
-		if($e->faultcode == self::TX_TER_ERROR_GENERAL_USERNOTFOUND) {
-			return new UserNotFoundException($e->getMessage(), $e->getCode());
+		if($faultcode == self::TX_TER_ERROR_GENERAL_USERNOTFOUND) {
+			return new UserNotFoundException($message, $code);
 		}
-		if($e->faultcode == self::TX_TER_ERROR_MODIFYEXTENSIONKEY_ACCESSDENIED ||
-			$e->faultcode == self::TX_TER_ERROR_DELETEEXTENSIONKEY_ACCESSDENIED ||
-			$e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_ACCESSDENIED
+		if($faultcode == self::TX_TER_ERROR_MODIFYEXTENSIONKEY_ACCESSDENIED ||
+			$faultcode == self::TX_TER_ERROR_DELETEEXTENSIONKEY_ACCESSDENIED ||
+			$faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_ACCESSDENIED
 		) {
-			return new AccessDeniedException($e->getMessage(), $e->getCode());
+			return new AccessDeniedException($message, $code);
 		}
-		if($e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_EXTENSIONDOESNTEXIST) {
-			return new ExtensionKeyNotExistsException($e->getMessage(), $e->getCode());
+		if($faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_EXTENSIONDOESNTEXIST) {
+			return new ExtensionKeyNotExistsException($message, $code);
 		}
-		if($e->faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYINCORRECT) {
-			return new Typo3VersionIncorrectException($e->getMessage(), $e->getCode());
+		if($faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYINCORRECT) {
+			return new Typo3VersionIncorrectException($message, $code);
 		}
 		return $e;
 	}
