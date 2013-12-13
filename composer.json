@@ -3,7 +3,7 @@
 	"description": "CLI utilities for TYPO3 CMS Extension",
 	"minimum-stability": "dev",
 	"require": {
-		"php": ">=5.3.3",
+		"php": ">=5.3",
 		"symfony/console": "~2.3",
 		"symfony/filesystem": "~2.3",
 		"psr/log": "1.0"
