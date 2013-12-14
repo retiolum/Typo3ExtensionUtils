@@ -3,6 +3,7 @@
 namespace etobi\extensionUtils\T3oSoap;
 use etobi\extensionUtils\T3oSoap\Exception\AccessDeniedException;
 use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyNotExistsException;
+use etobi\extensionUtils\T3oSoap\Exception\ExtensionVersionExistsException;
 use etobi\extensionUtils\T3oSoap\Exception\NoUserOrPasswordException;
 use etobi\extensionUtils\T3oSoap\Exception\SoapServerError;
 use etobi\extensionUtils\T3oSoap\Exception\Typo3VersionIncorrectException;
@@ -63,6 +64,7 @@ abstract class AbstractRequest {
 
 	const TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYINCORRECT = '209';
 	const TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYCHECKFAILED = '210';
+	const TX_TER_ERROR_UPLOADEXTENSION_EXTENSIONVERSIONEXISTS = '211';
     
     /**
      * @var string
@@ -150,6 +152,9 @@ abstract class AbstractRequest {
 		}
 		if($faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_TYPO3DEPENDENCYINCORRECT) {
 			return new Typo3VersionIncorrectException($message, $code);
+		}
+		if($faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_EXTENSIONVERSIONEXISTS) {
+			return new ExtensionVersionExistsException($message, $code);
 		}
 		return $e;
 	}
