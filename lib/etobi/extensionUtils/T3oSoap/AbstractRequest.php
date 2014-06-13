@@ -3,6 +3,7 @@
 namespace etobi\extensionUtils\T3oSoap;
 use etobi\extensionUtils\T3oSoap\Exception\AccessDeniedException;
 use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyNotExistsException;
+use etobi\extensionUtils\T3oSoap\Exception\ExtensionKeyNotValidException;
 use etobi\extensionUtils\T3oSoap\Exception\ExtensionVersionExistsException;
 use etobi\extensionUtils\T3oSoap\Exception\NoUserOrPasswordException;
 use etobi\extensionUtils\T3oSoap\Exception\SoapServerError;
@@ -155,6 +156,9 @@ abstract class AbstractRequest {
 		}
 		if($faultcode == self::TX_TER_ERROR_UPLOADEXTENSION_EXTENSIONVERSIONEXISTS) {
 			return new ExtensionVersionExistsException($message, $code);
+		}
+		if($faultcode == self::TX_TER_RESULT_EXTENSIONKEYNOTVALID) {
+			return new ExtensionKeyNotValidException($message, $code);
 		}
 		return $e;
 	}
