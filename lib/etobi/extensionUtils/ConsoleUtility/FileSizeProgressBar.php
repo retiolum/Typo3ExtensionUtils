@@ -47,11 +47,14 @@ class FileSizeProgressBar {
 	/**
 	 * the callback method that should be called by CURL
 	 *
-	 * @param integer $downloadedSize
-	 * @param integer $totalSize
+	 * @param resource $curl
+	 * @param int $downloadExpected
+	 * @param int $downloaded
+	 * @param int $uploadExpected
+	 * @param int $uploaded
 	 */
-	public function progressCallback($totalSize, $downloadedSize) {
-		if ($totalSize == 0) {
+	public function progressCallback($curl, $downloadExpected = 0, $downloaded = 0, $uploadExpected = 0, $uploaded = 0) {
+		if ($downloadExpected == 0) {
 			// NOTE: for some reason the first call by CURL is with both parameters set to 0
 			return;
 		}
@@ -59,12 +62,12 @@ class FileSizeProgressBar {
 			return;
 		}
 		if (!$this->isStarted) {
-			$this->start($totalSize);
+			$this->start($downloadExpected);
 		}
 
-		$this->progressHelper->setCurrent($downloadedSize, TRUE);
+		$this->progressHelper->setCurrent($downloaded, TRUE);
 
-		if ($totalSize == $downloadedSize) {
+		if ($downloadExpected == $downloaded) {
 			$this->output->writeln(''); // write newline
 			// NOTE: the callback is called multiple times with the same totalSize and downloadedSize by CURL
 			$this->isFinished = TRUE;
