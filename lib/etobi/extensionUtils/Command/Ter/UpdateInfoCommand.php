@@ -37,7 +37,7 @@ EOT
 	 * {@inheritdoc}
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$url = 'http://typo3.org/fileadmin/ter/extensions.xml.gz';
+		$url = 'https://extensions.typo3.org/fileadmin/ter/extensions.xml.gz';
 		$extensionsXmlFile = '/tmp/t3xutils.extensions.temp.xml';
 		$extensionsXmlFileGzipped = $extensionsXmlFile . '.gz';
 
