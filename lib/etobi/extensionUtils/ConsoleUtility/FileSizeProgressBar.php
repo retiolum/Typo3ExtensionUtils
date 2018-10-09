@@ -54,13 +54,15 @@ class FileSizeProgressBar {
 	 * @param int $uploaded
 	 */
 	public function progressCallback($curl, $downloadExpected = 0, $downloaded = 0, $uploadExpected = 0, $uploaded = 0) {
+		// NOTE: for some reason the first call by CURL is with both parameters set to 0
 		if ($downloadExpected == 0) {
-			// NOTE: for some reason the first call by CURL is with both parameters set to 0
 			return;
 		}
+
 		if ($this->isFinished) {
 			return;
 		}
+
 		if (!$this->isStarted) {
 			$this->start($downloadExpected);
 		}
