@@ -7,42 +7,43 @@ namespace etobi\extensionUtils\Service;
  */
 class Filesystem {
 
-    protected $bin = 'gzip';
+	protected $bin = 'gzip';
 
-    /**
-     * unzip a file
-     *
-     * The source file will be deleted
-     *
-     * @param $source
-     * @param $destination
-     * @return bool
-     * @throws \RuntimeException
-     */
-    public function unzip($source, $destination) {
-        $cmd = $this->createGzipCommand($source, $destination, '-df');
+	/**
+	 * unzip a file
+	 *
+	 * The source file will be deleted
+	 *
+	 * @param $source
+	 * @param $destination
+	 * @return bool
+	 * @throws \RuntimeException
+	 */
+	public function unzip($source, $destination) {
+		$cmd = $this->createGzipCommand($source, $destination, '-df');
 
-        $returnCode = 0;
-        system($cmd, $returnCode);
-        if($returnCode !== 0) {
-            throw new \RuntimeException(sprintf('The command "%s" exit with code %d.', $cmd, $returnCode));
-        }
-        return file_exists($destination);
-    }
+		$returnCode = 0;
+		system($cmd, $returnCode);
+		if ($returnCode !== 0) {
+			throw new \RuntimeException(sprintf('The command "%s" exit with code %d.', $cmd, $returnCode));
+		}
 
-    /**
-     * @param string $source
-     * @param string $destination
-     * @param string $flags
-     * @return string
-     */
-    protected function createGzipCommand($source, $destination, $flags = '') {
-        return sprintf(
-            '%s %s %s > %s',
-            $this->bin,
-            $flags,
-            escapeshellarg($source),
-            escapeshellarg($destination)
-        );
-    }
+		return file_exists($destination);
+	}
+
+	/**
+	 * @param string $source
+	 * @param string $destination
+	 * @param string $flags
+	 * @return string
+	 */
+	protected function createGzipCommand($source, $destination, $flags = '') {
+		return sprintf(
+			'%s %s %s > %s',
+			$this->bin,
+			$flags,
+			escapeshellarg($source),
+			escapeshellarg($destination)
+		);
+	}
 }

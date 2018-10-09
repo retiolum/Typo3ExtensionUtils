@@ -2,12 +2,10 @@
 
 namespace etobi\extensionUtils\Command\Ter;
 
-use etobi\extensionUtils\Controller\SelfController;
-
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -15,14 +13,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Christian Zenker <christian.zenker@599media.de>
  */
-class SearchUserCommand extends AbstractAuthenticatedTerCommand
-{
+class SearchUserCommand extends AbstractAuthenticatedTerCommand {
 
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function configure()
-	{
+	protected function configure() {
 		$this
 			->setName('ter:search:user')
 			->setDefinition(array(
@@ -30,7 +26,7 @@ class SearchUserCommand extends AbstractAuthenticatedTerCommand
 				new InputOption('width', NULL, InputOption::VALUE_OPTIONAL, 'maximum display width in columns', 80),
 			))
 			->setDescription('Search an extension by username')
-            ->setHelp(<<<EOT
+			->setHelp(<<<EOT
 Search an extension key by user
 
 Example
@@ -47,15 +43,13 @@ List all extension keys by user "kasper"
 * <info>ter.password</info>: password on typo3.org
 * <info>ter.wsdl</info>: wsdl url for the Soap API
 EOT
-)
-		;
+			);
 		$this->configureSoapOptions();
 		$this->configureCredentialOptions();
 	}
 
-	protected function prepareParameters(InputInterface $input, OutputInterface $output)
-	{
-		if(!$input->getArgument('user')) {
+	protected function prepareParameters(InputInterface $input, OutputInterface $output) {
+		if (!$input->getArgument('user')) {
 
 			$user = $this->getDialogHelper()->ask(
 				$output,
@@ -70,22 +64,22 @@ EOT
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		$command = $this->getApplication()->find('ter:search:all');
 
 		$arguments = array(
 			'command' => 'ter:search:all',
-			'--username'    => $input->getOption('username'),
+			'--username' => $input->getOption('username'),
 			'--password' => $input->getOption('password'),
 			'--user' => $input->getArgument('user'),
 			'--width' => $input->getOption('width'),
 		);
-		if($input->getOption('wsdl')) {
+		if ($input->getOption('wsdl')) {
 			$arguments['--wsdl'] = $input->getOption('wsdl');
 		}
 
 		$input = new ArrayInput($arguments);
+
 		return $command->run($input, $output);
 	}
 }

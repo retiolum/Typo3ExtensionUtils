@@ -30,6 +30,7 @@
 ***************************************************************/
 
 namespace etobi\extensionUtils\ter;
+
 use etobi\extensionUtils\Service\EmConf;
 use etobi\extensionUtils\Service\EmConfService;
 use etobi\extensionUtils\T3oSoap\UploadRequest;
@@ -85,6 +86,7 @@ class TerUpload {
 		$uploadRequest = new UploadRequest();
 		$uploadRequest->setWsdlURL($this->wsdlURL);
 		$uploadRequest->setCredentials($this->username, $this->password);
+
 		return $uploadRequest->upload(
 			$this->getExtensionData(),
 			Helper::getExtensionFilesData($this->path)
@@ -112,16 +114,6 @@ class TerUpload {
 	/**
 	 * @return array
 	 */
-	protected function getAccountData() {
-		return array(
-			'username' => $this->username,
-			'password' => $this->password
-		);
-	}
-
-	/**
-	 * @return array
-	 */
 	protected function getExtensionData() {
 		$emConf = $this->getEmConf();
 
@@ -140,13 +132,13 @@ class TerUpload {
 			'technicalData' => array(
 				'dependencies' => $this->getDependenciesArray(),
 				'loadOrder' => isset($emConf['loadOrder']) ? utf8_encode($emConf['loadOrder']) : '',
-				'uploadFolder' => isset($emConf['uploadfolder']) ? (boolean) intval($emConf['uploadfolder']) : FALSE,
+				'uploadFolder' => isset($emConf['uploadfolder']) ? (boolean)intval($emConf['uploadfolder']) : FALSE,
 				'createDirs' => isset($emConf['createDirs']) ? utf8_encode($emConf['createDirs']) : '',
-				'shy' => isset($emConf['shy']) ? (boolean) intval($emConf['shy']) : FALSE,
+				'shy' => isset($emConf['shy']) ? (boolean)intval($emConf['shy']) : FALSE,
 				'modules' => isset($emConf['module']) ? utf8_encode($emConf['module']) : '',
 				'modifyTables' => isset($emConf['modify_tables']) ? utf8_encode($emConf['modify_tables']) : '',
 				'priority' => isset($emConf['priority']) ? utf8_encode($emConf['priority']) : '',
-				'clearCacheOnLoad' => isset($emConf['clearCacheOnLoad']) ? (boolean) intval($emConf['clearCacheOnLoad']) : FALSE,
+				'clearCacheOnLoad' => isset($emConf['clearCacheOnLoad']) ? (boolean)intval($emConf['clearCacheOnLoad']) : FALSE,
 				'lockType' => isset($emConf['lockType']) ? utf8_encode($emConf['lockType']) : '',
 				'doNotLoadInFE' => isset($emConf['doNotLoadInFE']) ? utf8_encode($emConf['doNotLoadInFE']) : '',
 				'docPath' => isset($emConf['docPath']) ? utf8_encode($emConf['docPath']) : '',
@@ -172,6 +164,7 @@ class TerUpload {
 			$emConf = $emConfService->readFile($this->path . 'ext_emconf.php');
 			$this->emConf = $emConf->getConfigurationArray();
 		}
+
 		return $this->emConf;
 	}
 
@@ -219,18 +212,10 @@ class TerUpload {
 				'versionRange' => '',
 			);
 		}
+
 		// END for Bug #5919
 
 		return $dependenciesArr;
-	}
-
-	/**
-	 * @param $extensionKey
-	 * @return TerUpload
-	 */
-	public function setExtensionKey($extensionKey) {
-		$this->extensionKey = $extensionKey;
-		return $this;
 	}
 
 	/**
@@ -241,11 +226,12 @@ class TerUpload {
 	}
 
 	/**
-	 * @param $password
+	 * @param $extensionKey
 	 * @return TerUpload
 	 */
-	public function setPassword($password) {
-		$this->password = $password;
+	public function setExtensionKey($extensionKey) {
+		$this->extensionKey = $extensionKey;
+
 		return $this;
 	}
 
@@ -257,11 +243,12 @@ class TerUpload {
 	}
 
 	/**
-	 * @param $path
+	 * @param $password
 	 * @return TerUpload
 	 */
-	public function setPath($path) {
-		$this->path = rtrim($path, '/ ') . '/';
+	public function setPassword($password) {
+		$this->password = $password;
+
 		return $this;
 	}
 
@@ -273,11 +260,12 @@ class TerUpload {
 	}
 
 	/**
-	 * @param $uploadComment
+	 * @param $path
 	 * @return TerUpload
 	 */
-	public function setUploadComment($uploadComment) {
-		$this->uploadComment = $uploadComment;
+	public function setPath($path) {
+		$this->path = rtrim($path, '/ ') . '/';
+
 		return $this;
 	}
 
@@ -289,11 +277,12 @@ class TerUpload {
 	}
 
 	/**
-	 * @param $username
+	 * @param $uploadComment
 	 * @return TerUpload
 	 */
-	public function setUsername($username) {
-		$this->username = $username;
+	public function setUploadComment($uploadComment) {
+		$this->uploadComment = $uploadComment;
+
 		return $this;
 	}
 
@@ -305,11 +294,12 @@ class TerUpload {
 	}
 
 	/**
-	 * @param $wsdlURL
+	 * @param $username
 	 * @return TerUpload
 	 */
-	public function setWsdlURL($wsdlURL) {
-		$this->wsdlURL = $wsdlURL;
+	public function setUsername($username) {
+		$this->username = $username;
+
 		return $this;
 	}
 
@@ -318,6 +308,26 @@ class TerUpload {
 	 */
 	public function getWsdlURL() {
 		return $this->wsdlURL;
+	}
+
+	/**
+	 * @param $wsdlURL
+	 * @return TerUpload
+	 */
+	public function setWsdlURL($wsdlURL) {
+		$this->wsdlURL = $wsdlURL;
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getAccountData() {
+		return array(
+			'username' => $this->username,
+			'password' => $this->password,
+		);
 	}
 
 }

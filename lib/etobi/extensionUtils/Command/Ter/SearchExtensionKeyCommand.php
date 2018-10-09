@@ -2,12 +2,10 @@
 
 namespace etobi\extensionUtils\Command\Ter;
 
-use etobi\extensionUtils\Controller\SelfController;
-
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -15,14 +13,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Christian Zenker <christian.zenker@599media.de>
  */
-class SearchExtensionKeyCommand extends AbstractAuthenticatedTerCommand
-{
+class SearchExtensionKeyCommand extends AbstractAuthenticatedTerCommand {
 
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function configure()
-	{
+	protected function configure() {
 		$this
 			->setName('ter:search:extension-key')
 			->setDefinition(array(
@@ -30,7 +26,7 @@ class SearchExtensionKeyCommand extends AbstractAuthenticatedTerCommand
 				new InputOption('width', NULL, InputOption::VALUE_OPTIONAL, 'maximum display width in columns', 80),
 			))
 			->setDescription('Search an extension by extension key')
-            ->setHelp(<<<EOT
+			->setHelp(<<<EOT
 Search an extension by extension key
 
 This command can be used to see what user registered an extension key even if no version has been uploaded.
@@ -53,15 +49,13 @@ Find all extension keys that start with "my_"
 * <info>ter.password</info>: password on typo3.org
 * <info>ter.wsdl</info>: wsdl url for the Soap API
 EOT
-)
-		;
+			);
 		$this->configureSoapOptions();
 		$this->configureCredentialOptions();
 	}
 
-	protected function prepareParameters(InputInterface $input, OutputInterface $output)
-	{
-		if(!$input->getArgument('extensionKey')) {
+	protected function prepareParameters(InputInterface $input, OutputInterface $output) {
+		if (!$input->getArgument('extensionKey')) {
 
 			$extensionKey = $this->getDialogHelper()->ask(
 				$output,
@@ -76,22 +70,22 @@ EOT
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		$command = $this->getApplication()->find('ter:search:all');
 
 		$arguments = array(
 			'command' => 'ter:search:all',
-			'--username'    => $input->getOption('username'),
+			'--username' => $input->getOption('username'),
 			'--password' => $input->getOption('password'),
 			'--extensionKey' => $input->getArgument('extensionKey'),
 			'--width' => $input->getOption('width'),
 		);
-		if($input->getOption('wsdl')) {
+		if ($input->getOption('wsdl')) {
 			$arguments['--wsdl'] = $input->getOption('wsdl');
 		}
 
 		$input = new ArrayInput($arguments);
+
 		return $command->run($input, $output);
 	}
 }

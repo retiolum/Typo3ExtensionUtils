@@ -10,17 +10,9 @@ class TerExtensionKeyInfo implements \ArrayAccess, \IteratorAggregate {
 	protected $data = array();
 
 	public function __construct($data = array()) {
-		if($data) {
+		if ($data) {
 			$this->data = $data;
 		}
-	}
-
-	public function offsetExists($offset) {
-		return array_key_exists($offset, $this->data);
-	}
-
-	public function offsetGet($offset) {
-		return $this->offsetExists($offset) ? $this->data[$offset] : NULL;
 	}
 
 	public function offsetSet($offset, $value) {
@@ -35,6 +27,14 @@ class TerExtensionKeyInfo implements \ArrayAccess, \IteratorAggregate {
 		return $this->offsetGet('extensionkey');
 	}
 
+	public function offsetGet($offset) {
+		return $this->offsetExists($offset) ? $this->data[$offset] : NULL;
+	}
+
+	public function offsetExists($offset) {
+		return array_key_exists($offset, $this->data);
+	}
+
 	public function getTitle() {
 		return $this->offsetGet('title');
 	}
@@ -47,8 +47,7 @@ class TerExtensionKeyInfo implements \ArrayAccess, \IteratorAggregate {
 		return $this->offsetGet('ownerusername');
 	}
 
-	public function getIterator()
-	{
+	public function getIterator() {
 		return new \ArrayObject($this->data);
 	}
 }

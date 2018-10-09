@@ -11,6 +11,7 @@ class UploadRequest extends AbstractAuthenticatedRequest {
 	 * @var null|array
 	 */
 	protected $lastResultMessages = NULL;
+
 	/**
 	 * @var null|string
 	 */
@@ -33,14 +34,14 @@ class UploadRequest extends AbstractAuthenticatedRequest {
 
 		try {
 			$response = $this->client->call('uploadExtension');
-		} catch(\SoapFault $e) {
+		} catch (\SoapFault $e) {
 			throw $this->convertSoapError($e);
 		}
 
-		if(!is_array($response) || !array_key_exists('resultCode', $response)) {
+		if (!is_array($response) || !array_key_exists('resultCode', $response)) {
 			throw new \RuntimeException('Soap API responded in an unknown format: ' . gettype($response));
 		}
-		if($response['resultCode'] !== self::TX_TER_RESULT_EXTENSIONSUCCESSFULLYUPLOADED) {
+		if ($response['resultCode'] !== self::TX_TER_RESULT_EXTENSIONSUCCESSFULLYUPLOADED) {
 			throw new \RuntimeException(sprintf('Soap API responded with an unknown response. result code "%s"', $response['resultCode']));
 		}
 
@@ -53,16 +54,14 @@ class UploadRequest extends AbstractAuthenticatedRequest {
 	/**
 	 * @return array|null
 	 */
-	public function getLastResultMessages()
-	{
+	public function getLastResultMessages() {
 		return $this->lastResultMessages;
 	}
 
 	/**
 	 * @return null|string
 	 */
-	public function getLastVersion()
-	{
+	public function getLastVersion() {
 		return $this->lastVersion;
 	}
 

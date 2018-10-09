@@ -2,11 +2,8 @@
 
 namespace etobi\extensionUtils\Command\Ter;
 
-use etobi\extensionUtils\Controller\SelfController;
-
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -14,14 +11,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Christian Zenker <christian.zenker@599media.de>
  */
-class SearchAllCommand extends AbstractAuthenticatedTerCommand
-{
+class SearchAllCommand extends AbstractAuthenticatedTerCommand {
 
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function configure()
-	{
+	protected function configure() {
 		$this
 			->setName('ter:search:all')
 			->setDefinition(array(
@@ -32,7 +27,7 @@ class SearchAllCommand extends AbstractAuthenticatedTerCommand
 				new InputOption('width', NULL, InputOption::VALUE_OPTIONAL, 'maximum display width in columns', 80),
 			))
 			->setDescription('Search an extension key that matches all the given limitations')
-            ->setHelp(<<<EOT
+			->setHelp(<<<EOT
 Search an extension key.
 
 If you set multiple options, they are connected with AND.
@@ -63,8 +58,7 @@ Search all extensions that have a description mentioning "tt_news" and are creat
   t3xutils ter:search:all --description="*tt_news*" --user="rupi"
 
 EOT
-)
-		;
+			);
 		$this->configureSoapOptions();
 		$this->configureCredentialOptions();
 	}
@@ -72,8 +66,7 @@ EOT
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		/**
 		 * @var $search \etobi\extensionUtils\T3oSoap\SearchRequest
 		 */
@@ -84,10 +77,11 @@ EOT
 			str_replace('*', '%', $input->getOption('title')),
 			str_replace('*', '%', $input->getOption('description'))
 		);
-		if(count($results) == 0) {
+		if (count($results) == 0) {
 			$this->output->writeln('Nothing found');
-		} else {
-			foreach($results as $result) {
+		}
+		else {
+			foreach ($results as $result) {
 				$this->printExtensionInfo($result);
 			}
 		}
@@ -103,9 +97,9 @@ EOT
 		$this->output->writeln('<comment>' . $data['title'] . '</comment>');
 		$maxKeyStrlen = 1;
 
-		foreach($data as $key=>$value) {
+		foreach ($data as $key => $value) {
 			$strlen = strlen($key);
-			if($strlen > $maxKeyStrlen) {
+			if ($strlen > $maxKeyStrlen) {
 				$maxKeyStrlen = $strlen;
 			}
 		}
@@ -119,9 +113,9 @@ EOT
 		$lineFormat = '%-' . $maxKeyStrlen . 's  %-' . $maxValueStrlen . 's';
 
 		// print data
-		foreach($data as $key=>$value) {
+		foreach ($data as $key => $value) {
 			$value = wordwrap(trim($value), $maxValueStrlen);
-			if(!is_array($value)) {
+			if (!is_array($value)) {
 				$value = explode("\n", $value);
 			}
 
@@ -131,7 +125,7 @@ EOT
 				$key,
 				array_shift($value)
 			));
-			while($row = array_shift($value)) {
+			while ($row = array_shift($value)) {
 				$this->output->writeln(sprintf(
 					$lineFormat,
 					'',

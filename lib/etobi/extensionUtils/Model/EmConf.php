@@ -8,26 +8,43 @@ namespace etobi\extensionUtils\Model;
 class EmConf implements \ArrayAccess, \IteratorAggregate {
 
 	const CATEGORY_BACKEND = 'be';
+
 	const CATEGORY_MODULE = 'module';
+
 	const CATEGORY_FRONTEND = 'fe';
+
 	const CATEGORY_PLUGIN = 'plugin';
+
 	const CATEGORY_OTHER = 'misc';
+
 	const CATEGORY_SERVICE = 'services';
+
 	const CATEGORY_TEMPLATE = 'templates';
+
 	const CATEGORY_DOCUMENTATION = 'doc';
+
 	const CATEGORY_EXAMPLE = 'example';
 
 	const STATE_ALPHA = 'alpha';
+
 	const STATE_BETA = 'beta';
+
 	const STATE_STABLE = 'stable';
+
 	const STATE_EXPERIMENTAL = 'experimental';
+
 	const STATE_TEST = 'test';
+
 	const STATE_OBSOLETE = 'obsolete';
+
 	const STATE_EXCLUDE_FROM_UPDATES = 'excludeFromUpdates';
+
 	const STATE_NOT_AVAILABLE = 'n/a';
 
 	const PRIORITY_TOP = 'top';
+
 	const PRIORITY_BOTTOM = 'bottom';
+
 	const PRIORITY_DEFAULT = '';
 
 	/**
@@ -37,19 +54,20 @@ class EmConf implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * comment in the header of the ext_emconf.php file
+	 *
 	 * @var string
 	 */
 	protected $comment = '';
 
 	public function __construct($data = array(), $comment = '') {
 		$this->setConfigurationArray($data);
-		if($comment) {
+		if ($comment) {
 			$this->setComment($comment);
 		}
 	}
 
 	public function setConfigurationArray($data) {
-		if(!(is_array($data) || ($data instanceof \ArrayAccess))) {
+		if (!(is_array($data) || ($data instanceof \ArrayAccess))) {
 			throw new \InvalidArgumentException(__METHOD__ . ' expects an array.');
 		}
 		$this->data = $data;
@@ -59,13 +77,12 @@ class EmConf implements \ArrayAccess, \IteratorAggregate {
 		return $this->data;
 	}
 
+	public function getComment() {
+		return $this->comment;
+	}
 
 	public function setComment($comment) {
 		$this->comment = $comment;
-	}
-
-	public function getComment() {
-		return $this->comment;
 	}
 
 	public function getTitle() {
@@ -228,12 +245,12 @@ class EmConf implements \ArrayAccess, \IteratorAggregate {
 		$this->data['version'] = (string)$version;
 	}
 
-	public function offsetExists($offset) {
-		return array_key_exists($offset, $this->data);
-	}
-
 	public function offsetGet($offset) {
 		return $this->offsetExists($offset) ? $this->data[$offset] : NULL;
+	}
+
+	public function offsetExists($offset) {
+		return array_key_exists($offset, $this->data);
 	}
 
 	public function offsetSet($offset, $value) {

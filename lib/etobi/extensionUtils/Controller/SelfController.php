@@ -38,67 +38,16 @@ class SelfController extends AbstractController {
 	public function checkForUpdateAction() {
 		$sha1 = $this->getPharVersion();
 		if ($sha1 && $sha1 !== @constant('T3XUTILS_VERSION')) {
-            if($this->logger) {
-                $this->logger->notice('You\'re using a different version then the latest available on github. Consider updating using the "selfupdate" command.');
-                $this->logger->notice('Visit ' . $this->homepage . ' for more information.');
-            }
+			if ($this->logger) {
+				$this->logger->notice('You\'re using a different version then the latest available on github. Consider updating using the "selfupdate" command.');
+				$this->logger->notice('Visit ' . $this->homepage . ' for more information.');
+			}
+
 			return FALSE;
-		} else {
+		}
+		else {
 			return TRUE;
 		}
-	}
-
-	/**
-	 * @throws \Exception
-	 */
-	public function updateAction() {
-		$localFilename = $_SERVER['argv'][0];
-		$backupFilename = basename($localFilename, '.phar').'-backup.phar';
-		$tempFilename = basename($localFilename, '.phar').'-temp.phar';
-
-		if (@constant('T3XUTILS_VERSION')) {
-			$sha1 = $this->getPharVersion();
-			if ($sha1 && $sha1 !== @constant('T3XUTILS_VERSION')) {
-				try {
-                    if($this->logger) {
-					    $this->logger->info('download ' . $this->pharDownloadUrl . ' ...');
-                    }
-					$downloadCommand = 'wget -q ' . $this->pharDownloadUrl . ' -O ' . $tempFilename;
-					exec($downloadCommand);
-					chmod($tempFilename, 0777 & ~umask());
-
-                    if($this->logger) {
-					    $this->logger->info('check download ' . ' ...');
-                    }
-					$testPhar = new \Phar($tempFilename);
-					unset($testPhar);
-
-                    if($this->logger) {
-                        $this->logger->info('install to ' . $localFilename . ' ...');
-                    }
-					@unlink($backupFilename);
-					rename($localFilename, $backupFilename);
-					rename($tempFilename, $localFilename);
-
-                    if($this->logger) {
-					    $this->logger->notice('done ("' . $sha1 . '")');
-                    }
-				} catch (\Exception $e) {
-					@unlink($tempFilename);
-					if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
-						throw $e;
-					}
-					throw new \Exception('The download is corrupted ('.$e->getMessage().').');
-				}
-			} else {
-                if($this->logger) {
-				    $this->logger->notice('already up-to-date.');
-                }
-			}
-		} else {
-			throw new \Exception('selfupdate does only work, when running the .phar');
-		}
-		return;
 	}
 
 	/**
@@ -106,5 +55,61 @@ class SelfController extends AbstractController {
 	 */
 	protected function getPharVersion() {
 		return @file_get_contents($this->pharVersionUrl);
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public function updateAction() {
+		$localFilename = $_SERVER['argv'][0];
+		$backupFilename = basename($localFilename, '.phar') . '-backup.phar';
+		$tempFilename = basename($localFilename, '.phar') . '-temp.phar';
+
+		if (@constant('T3XUTILS_VERSION')) {
+			$sha1 = $this->getPharVersion();
+			if ($sha1 && $sha1 !== @constant('T3XUTILS_VERSION')) {
+				try {
+					if ($this->logger) {
+						$this->logger->info('download ' . $this->pharDownloadUrl . ' ...');
+					}
+					$downloadCommand = 'wget -q ' . $this->pharDownloadUrl . ' -O ' . $tempFilename;
+					exec($downloadCommand);
+					chmod($tempFilename, 0777 & ~umask());
+
+					if ($this->logger) {
+						$this->logger->info('check download ' . ' ...');
+					}
+					$testPhar = new \Phar($tempFilename);
+					unset($testPhar);
+
+					if ($this->logger) {
+						$this->logger->info('install to ' . $localFilename . ' ...');
+					}
+					@unlink($backupFilename);
+					rename($localFilename, $backupFilename);
+					rename($tempFilename, $localFilename);
+
+					if ($this->logger) {
+						$this->logger->notice('done ("' . $sha1 . '")');
+					}
+				} catch (\Exception $e) {
+					@unlink($tempFilename);
+					if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
+						throw $e;
+					}
+					throw new \Exception('The download is corrupted (' . $e->getMessage() . ').');
+				}
+			}
+			else {
+				if ($this->logger) {
+					$this->logger->notice('already up-to-date.');
+				}
+			}
+		}
+		else {
+			throw new \Exception('selfupdate does only work, when running the .phar');
+		}
+
+		return;
 	}
 }

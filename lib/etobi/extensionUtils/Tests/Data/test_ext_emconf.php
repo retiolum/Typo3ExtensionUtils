@@ -10,7 +10,7 @@
  * writing. "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = array (
+$EM_CONF[$_EXTKEY] = array(
 	'title' => 'Extension Builder',
 	'description' => 'The Extension Builder helps you build and manage your Extbase based TYPO3 extensions.',
 	'category' => 'module',
