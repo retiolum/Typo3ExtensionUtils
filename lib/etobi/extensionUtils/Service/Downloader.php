@@ -24,6 +24,7 @@ class Downloader {
 		$ch = curl_init($url);
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		$fh = fopen($path, 'w');
 		if (!$fh) {
 			throw new \RuntimeException(sprintf('The file "%s" could not be opened to write to.', $path));
