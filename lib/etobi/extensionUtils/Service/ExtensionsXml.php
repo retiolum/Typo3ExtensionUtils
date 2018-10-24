@@ -103,14 +103,16 @@ class ExtensionsXml {
 		$result = $this->query('/extensions/extension[@extensionkey="' . $extensionKey . '"]');
 
 		$versionInfos = array();
-		foreach ($result->item(0)->childNodes as $versionNode) {
-			/** @var $versionNode \DOMElement */
-			if ($versionNode->nodeName == 'version' && $versionNode->hasAttribute('version')) {
-				$versionInfos[] = array(
-					'version' => $this->sanitizeString($versionNode->getAttribute('version')),
-					'comment' => $this->sanitizeString($versionNode->getElementsByTagName('uploadcomment')->item(0)->nodeValue),
-					'timestamp' => $this->sanitizeString($versionNode->getElementsByTagName('lastuploaddate')->item(0)->nodeValue),
-				);
+		if ($result->length > 0) {
+			foreach ($result->item(0)->childNodes as $versionNode) {
+				/** @var $versionNode \DOMElement */
+				if ($versionNode->nodeName == 'version' && $versionNode->hasAttribute('version')) {
+					$versionInfos[] = array(
+						'version' => $this->sanitizeString($versionNode->getAttribute('version')),
+						'comment' => $this->sanitizeString($versionNode->getElementsByTagName('uploadcomment')->item(0)->nodeValue),
+						'timestamp' => $this->sanitizeString($versionNode->getElementsByTagName('lastuploaddate')->item(0)->nodeValue),
+					);
+				}
 			}
 		}
 
